@@ -9,6 +9,7 @@
             try {
                 var t = localStorage.getItem('pomodoroTheme');
                 if (t === 'dark') document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
             } catch(e) {}
         })();
     </script>
@@ -79,6 +80,14 @@
             transform-origin: 50% 50%;
         }
 
+        @keyframes dashSpin {
+            to { stroke-dashoffset: -1000; }
+        }
+        .ring-dash {
+            will-change: stroke-dashoffset;
+            animation: dashSpin 2.2s linear infinite;
+        }
+
         /* Scrollbar personalizada */
         ::-webkit-scrollbar {
             width: 8px;
@@ -138,6 +147,7 @@
                 <button id="lang-pt" onclick="setLang('pt')" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🇧🇷</button>
                 <button id="lang-es" onclick="setLang('es')" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🇪🇸</button>
                 <button id="lang-en" onclick="setLang('en')" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🇺🇸</button>
+                <button id="theme-toggle" onclick="toggleTheme()" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🌚 Oscuro</button>
             </div>
 
             <div class="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden">
@@ -150,8 +160,9 @@
 
                 <!-- Timer Visual -->
                 <div class="relative w-64 h-64 mb-8">
-                    <svg class="w-full h-full" width="250" height="250">
+                    <svg id="timer-svg" class="w-full h-full" width="250" height="250">
                         <circle class="text-gray-200 dark:text-gray-700" stroke-width="8" stroke="currentColor" fill="transparent" r="110" cx="128" cy="128" />
+                        <circle id="spinner-ring" class="opacity-60 text-green-400 dark:text-green-500" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="116" cx="128" cy="128" />
                         <circle id="progress-ring" class="text-green-500 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="110" cx="128" cy="128" />
                     </svg>
                     <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
@@ -210,6 +221,10 @@
         </div>
     </div>
 
+    <footer class="mt-6 mb-6 px-3 py-1 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+        Feito com 💙 pelo <a href="https://instagram.com/aleqcodes" target="_blank" rel="noopener noreferrer" class="underline hover:text-green-600 dark:hover:text-green-400">@aleqcodes</a> • GitHub: <a href="https://github.com/aleqcodes" target="_blank" rel="noopener noreferrer" class="underline hover:text-green-600 dark:hover:text-green-400">@aleqcodes</a>
+    </footer>
+
     <script>
         // --- Configuración y Estado ---
         const MODES = {
@@ -231,6 +246,11 @@
         let currentMode = 'focus';
         let timerId = null;
         let isRunning = false;
+        let startTs = null;
+        let endTs = null;
+        let spinnerRAF = null;
+        let spinnerOffset = 0;
+        let spinnerCirc = 0;
         
         // Cargar estado inicial del jardín o crear vacío
         let gardenState = JSON.parse(localStorage.getItem('pomodoroGarden')) || [];
@@ -242,6 +262,7 @@
         const iconPlay = document.getElementById('icon-play');
         const textPlay = document.getElementById('text-play');
         const progressRing = document.getElementById('progress-ring');
+        const spinnerRing = document.getElementById('spinner-ring');
         const gardenGrid = document.getElementById('garden-grid');
         const skyLayer = document.getElementById('sky-layer');
         const plantCountEl = document.getElementById('plant-count');
@@ -250,6 +271,7 @@
         const langBtnEs = document.getElementById('lang-es');
         const langBtnPt = document.getElementById('lang-pt');
         const langBtnEn = document.getElementById('lang-en');
+        const themeToggleBtn = document.getElementById('theme-toggle');
         const titleEl = document.getElementById('app-title');
         const subtitleEl = document.getElementById('app-subtitle');
         const legendTitleEl = document.getElementById('legend-title');
@@ -391,11 +413,31 @@
             if (resetBtnEl) resetBtnEl.textContent = t('reset_btn');
             if (plantLabelEl) plantLabelEl.textContent = t('plants_label');
             if (butterflyLabelEl) butterflyLabelEl.textContent = t('butterflies_label');
-            if (statusText) statusText.textContent = isRunning ? t('status_growing') : t('status_ready');
-            if (textPlay) textPlay.textContent = isRunning ? t('btn_pause') : t('btn_start');
+            const totalTime = MODES[currentMode].time;
+            const paused = !isRunning && timeLeft > 0 && timeLeft < totalTime;
+            if (statusText) statusText.textContent = isRunning ? t('status_growing') : paused ? t('status_paused') : t('status_ready');
+            if (textPlay) textPlay.textContent = isRunning ? t('btn_pause') : paused ? t('btn_resume') : t('btn_start');
+            updateThemeButtonLabel();
             updateLangButtons();
             updateDisplay();
             
+        }
+
+        function updateThemeButtonLabel() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (themeToggleBtn) themeToggleBtn.textContent = isDark ? t('toggle_to_light') : t('toggle_to_dark');
+        }
+
+        function setTheme(theme) {
+            if (theme === 'dark') document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
+            try { localStorage.setItem('pomodoroTheme', theme); } catch(e) {}
+            updateThemeButtonLabel();
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            setTheme(isDark ? 'light' : 'dark');
         }
 
         function setLang(lang) {
@@ -471,15 +513,43 @@
         }
 
         
-
-        document.documentElement.classList.add('dark');
-        applyLanguage();
-
-        // Configurar circunferencia para el anillo de progreso
+        
         const radius = progressRing.r.baseVal.value;
         const circumference = radius * 2 * Math.PI;
         progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
         progressRing.style.strokeDashoffset = circumference;
+        if (spinnerRing) {
+            const sRadius = spinnerRing.r.baseVal.value;
+            spinnerCirc = sRadius * 2 * Math.PI;
+            const seg = Math.max(80, Math.min(220, Math.round(spinnerCirc * 0.25)));
+            spinnerRing.style.setProperty('stroke-dasharray', `${seg} ${spinnerCirc - seg}`);
+            spinnerRing.style.setProperty('stroke-dashoffset', '0');
+        }
+        
+        applyLanguage();
+
+        function startSpinner() {
+            if (!spinnerRing || spinnerRAF) return;
+            spinnerOffset = 0;
+            let last = performance.now();
+            const speed = 400; // units per second
+            const loop = (ts) => {
+                const dt = ts - last;
+                last = ts;
+                spinnerOffset = (spinnerOffset + (dt / 1000) * speed) % spinnerCirc;
+                spinnerRing.style.strokeDashoffset = -spinnerOffset;
+                spinnerRAF = requestAnimationFrame(loop);
+            };
+            spinnerRAF = requestAnimationFrame(loop);
+        }
+
+        function stopSpinner() {
+            if (spinnerRAF) {
+                cancelAnimationFrame(spinnerRAF);
+                spinnerRAF = null;
+            }
+            if (spinnerRing) spinnerRing.style.strokeDashoffset = 0;
+        }
 
         // --- Funciones Principales ---
 
@@ -512,35 +582,38 @@
 
         function startTimer() {
             if (isRunning) return;
+            if (timeLeft <= 0) timeLeft = MODES[currentMode].time;
             isRunning = true;
-            
-            // UI Update
             playBtn.classList.replace('bg-green-500', 'bg-yellow-500');
             playBtn.classList.replace('hover:bg-green-600', 'hover:bg-yellow-600');
             iconPlay.textContent = '⏸';
             textPlay.textContent = t('btn_pause');
             statusText.textContent = t('status_growing');
-
+            startSpinner();
+            startTs = Date.now();
+            endTs = startTs + timeLeft * 1000;
             timerId = setInterval(() => {
-                timeLeft--;
-                updateDisplay();
-
-                if (timeLeft <= 0) {
+                const remain = Math.max(0, Math.floor((endTs - Date.now()) / 1000));
+                if (remain !== timeLeft) {
+                    timeLeft = remain;
+                    updateDisplay();
+                }
+                if (remain <= 0) {
                     completeCycle();
                 }
-            }, 1000);
+            }, 250);
         }
 
         function pauseTimer() {
             clearInterval(timerId);
+            timerId = null;
             isRunning = false;
-            
-            // UI Update
             playBtn.classList.replace('bg-yellow-500', 'bg-green-500');
             playBtn.classList.replace('hover:bg-yellow-600', 'hover:bg-green-600');
             iconPlay.textContent = '▶';
             textPlay.textContent = t('btn_resume');
             statusText.textContent = t('status_paused');
+            stopSpinner();
         }
 
         function resetTimer() {
@@ -550,6 +623,7 @@
             statusText.textContent = t('status_ready');
             setProgress(0);
             textPlay.textContent = t('btn_start');
+            stopSpinner();
         }
 
         function setMode(mode) {
@@ -577,20 +651,15 @@
 
         function completeCycle() {
             pauseTimer();
-            timeLeft = 0; // Ensure 0
+            timeLeft = 0;
             updateDisplay();
-            
-            // Sonido
-            try { alarmSound.play(); } catch(e) { console.log("Audio play blocked"); }
-
-            // Recompensa
+            try { alarmSound.play(); } catch(e) {}
             const rewardType = MODES[currentMode].reward;
             addRewardToGarden(rewardType);
-            
             alert(rewardType === 'tree' ? t('alert_tree') : rewardType === 'flower' ? t('alert_flower') : t('alert_butterfly'));
-            
-            // Auto reset
-            resetTimer();
+            textPlay.textContent = t('btn_start');
+            statusText.textContent = t('status_ready');
+            stopSpinner();
         }
 
         // --- Lógica del Jardín ---

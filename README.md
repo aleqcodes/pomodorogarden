@@ -18,6 +18,7 @@ A playful, single‑file web app that helps you focus using the Pomodoro techniq
 - When time reaches `00:00`, a reward is added to your garden.
 - Your garden and language preference persist in `localStorage`.
 - Use `Reset Garden` to clear all saved items.
+- See live demo: https://pomodorogarden.netlify.app/
 
 ### Features
 - Modes and rewards (`index.html:215`):
@@ -86,6 +87,7 @@ A playful, single‑file web app that helps you focus using the Pomodoro techniq
 - Ao chegar em `00:00`, uma recompensa é adicionada ao jardim.
 - O jardim e o idioma ficam salvos em `localStorage`.
 - Use `Reiniciar Jardim` para apagar tudo.
+- Veja a demo ao vivo: https://pomodorogarden.netlify.app/
 
 ### Recursos
 - Modos e recompensas (`index.html:215`):
@@ -146,6 +148,7 @@ A playful, single‑file web app that helps you focus using the Pomodoro techniq
 - Al llegar a `00:00`, se añade una recompensa al jardín.
 - El jardín y el idioma se guardan en `localStorage`.
 - Usa `Reiniciar Jardín` para borrar todo.
+- Ver demo en vivo: https://pomodorogarden.netlify.app/
 
 ### Funcionalidades
 - Modos y recompensas (`index.html:215`):
@@ -178,4 +181,6 @@ A playful, single‑file web app that helps you focus using the Pomodoro techniq
 - Funciona en navegadores modernos.
 - Usa `localStorage` y `Notification` opcional.
 - Todos los datos permanecen en tu navegador.
+
+Feito com 💙 pelo [@aleqcodes](https://instagram.com/aleqcodes) • GitHub: [@aleqcodes](https://github.com/aleqcodes)
 
