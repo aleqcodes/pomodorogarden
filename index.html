@@ -1,848 +1,256 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jardín Pomodoro 🍅🌳</title>
-    <script>
-        (function(){
-            try {
-                var t = localStorage.getItem('pomodoroTheme');
-                if (t === 'dark') document.documentElement.classList.add('dark');
-                else document.documentElement.classList.remove('dark');
-            } catch(e) {}
-        })();
-    </script>
-    <script>
-        tailwind.config = { darkMode: 'class' }
-    </script>
-    <!-- Tailwind CSS para estilos rápidos -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description"
+        content="Pomodoro Garden - Focus timer that helps you grow a beautiful virtual garden while staying productive">
+    <meta name="keywords" content="pomodoro, timer, productivity, focus, garden, pomodoro technique">
+    <meta name="author" content="@aleqcodes">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🍅 Pomodoro Garden">
+    <meta property="og:description" content="Focus and grow your virtual forest with the Pomodoro technique">
+    <meta property="og:image" content="https://pomodorogarden.netlify.app/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="🍅 Pomodoro Garden">
+    <meta name="twitter:description" content="Focus and grow your virtual forest">
+
+    <title>🍅 Jardín Pomodoro</title>
+
+    <!-- Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍅</text></svg>">
+
     <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'Quicksand', sans-serif;
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
 
-        /* Animación de crecimiento para plantas */
-        @keyframes grow {
-            0% { transform: scale(0) translateY(10px); opacity: 0; }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1) translateY(0); opacity: 1; }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif']
+                    }
+                }
+            }
         }
+    </script>
 
-        /* Animación de aleteo y vuelo para mariposas */
-        @keyframes flutter {
-            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            25% { transform: translate(10px, -15px) rotate(5deg) scale(0.9); }
-            50% { transform: translate(-5px, -25px) rotate(-5deg) scale(1); }
-            75% { transform: translate(-15px, -10px) rotate(5deg) scale(0.95); }
-            100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-        }
-
-        .plant-item {
-            animation: grow 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            font-size: 2.5rem;
-            user-select: none;
-            transition: transform 0.2s;
-            cursor: pointer;
-            background: rgba(240, 253, 244, 0.85);
-        }
-
-        .plant-item:hover {
-            transform: scale(1.2);
-        }
-
-        .butterfly {
-            position: absolute;
-            font-size: 1.8rem;
-            animation: flutter 3s infinite ease-in-out alternate;
-            z-index: 10;
-            pointer-events: none; /* Dejar pasar clicks */
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
-        }
-
-        .glass-panel {
-            background: rgba(240, 253, 244, 0.96);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(22, 163, 74, 0.08);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
-            color: #1f2937;
-        }
-
-        /* Barra de progreso circular */
-        .progress-ring__circle {
-            transition: stroke-dashoffset 0.35s;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-        }
-
-        @keyframes dashSpin {
-            to { stroke-dashoffset: -1000; }
-        }
-        .ring-dash {
-            will-change: stroke-dashoffset;
-            animation: dashSpin 2.2s linear infinite;
-        }
-
-        /* Scrollbar personalizada */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #a7f3d0;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #34d399;
-        }
-
-        .dark body {
-            background: linear-gradient(135deg, #0f172a 0%, #052e2b 100%);
-            color: #e5e7eb;
-        }
-        .dark .glass-panel {
-            background: rgba(17, 24, 39, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-        }
-        .dark .plant-item {
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: #374151;
-        }
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
-        .dark #ground-gradient {
-            background: linear-gradient(to top, rgba(34,197,94,0.25), transparent);
-        }
-    </style>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body class="text-gray-700 relative dark:text-gray-200">
 
-    <!-- Notificación de sonido (invisible) -->
+    <!-- Audio for alarm (preloaded) -->
     <audio id="alarm-sound" preload="auto">
-        <!-- Sonido suave tipo 'ding' -->
         <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 h-screen max-h-screen">
-        
-        <!-- Panel Izquierdo: Controles -->
-        <div class="w-full md:w-1/3 flex flex-col gap-6">
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-8 min-h-screen">
+
+        <!-- Left Panel: Controls -->
+        <aside class="w-full md:w-1/3 flex flex-col gap-4 md:gap-6">
+
+            <!-- Header -->
             <header class="text-center md:text-left">
-                <h1 id="app-title" class="text-3xl font-bold text-green-700 dark:text-green-300">🍅 Jardín Pomodoro</h1>
-                <p id="app-subtitle" class="text-sm text-gray-500 dark:text-gray-400">Concéntrate y cultiva tu bosque</p>
+                <h1 id="app-title" class="text-3xl md:text-4xl font-bold text-green-700 dark:text-green-300 mb-1">
+                    🍅 Jardín Pomodoro
+                </h1>
+                <p id="app-subtitle" class="text-sm text-gray-500 dark:text-gray-400">
+                    Concéntrate y cultiva tu bosque
+                </p>
             </header>
 
-            <div class="flex items-center justify-start gap-2">
-                <button id="lang-pt" onclick="setLang('pt')" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🇧🇷</button>
-                <button id="lang-es" onclick="setLang('es')" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🇪🇸</button>
-                <button id="lang-en" onclick="setLang('en')" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🇺🇸</button>
-                <button id="theme-toggle" onclick="toggleTheme()" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200">🌚 Oscuro</button>
+            <!-- Language & Theme Controls -->
+            <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+                <button id="lang-pt" onclick="setLang('pt')"
+                    class="btn-lang text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    aria-label="Português">
+                    🇧🇷
+                </button>
+                <button id="lang-es" onclick="setLang('es')"
+                    class="btn-lang text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    aria-label="Español">
+                    🇪🇸
+                </button>
+                <button id="lang-en" onclick="setLang('en')"
+                    class="btn-lang text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    aria-label="English">
+                    🇺🇸
+                </button>
+                <button id="theme-toggle" onclick="toggleTheme()"
+                    class="btn-theme text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    aria-label="Toggle theme">
+                    🌚 Oscuro
+                </button>
             </div>
 
-            <div class="glass-panel rounded-3xl p-8 flex flex-col items-center justify-center relative overflow-hidden">
-                <!-- Selector de Modo -->
-                <div class="flex bg-gray-100 dark:bg-gray-800 rounded-full p-1 mb-8 w-full">
-                    <button onclick="setMode('focus')" id="btn-focus" class="flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all bg-white shadow-sm text-green-600 dark:bg-gray-900 dark:text-green-400 dark:border dark:border-green-900">Enfoque</button>
-                    <button onclick="setMode('short')" id="btn-short" class="flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400">Corto</button>
-                    <button onclick="setMode('long')" id="btn-long" class="flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400">Largo</button>
+            <!-- Timer Panel -->
+            <div
+                class="glass-panel rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center relative overflow-hidden">
+
+                <!-- Mode Selector -->
+                <div class="flex bg-gray-100 dark:bg-gray-800 rounded-full p-1 mb-6 md:mb-8 w-full" role="tablist">
+                    <button onclick="setMode('focus')" id="btn-focus"
+                        class="flex-1 py-2 px-3 md:px-4 rounded-full text-xs md:text-sm font-semibold transition-all bg-white shadow-sm text-green-600 dark:bg-gray-900 dark:text-green-400 dark:border dark:border-green-900"
+                        role="tab" aria-selected="true">
+                        Enfoque
+                    </button>
+                    <button onclick="setMode('short')" id="btn-short"
+                        class="flex-1 py-2 px-3 md:px-4 rounded-full text-xs md:text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400"
+                        role="tab" aria-selected="false">
+                        Corto
+                    </button>
+                    <button onclick="setMode('long')" id="btn-long"
+                        class="flex-1 py-2 px-3 md:px-4 rounded-full text-xs md:text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400"
+                        role="tab" aria-selected="false">
+                        Largo
+                    </button>
                 </div>
 
                 <!-- Timer Visual -->
-                <div class="relative w-64 h-64 mb-8">
-                    <svg id="timer-svg" class="w-full h-full" width="250" height="250">
-                        <circle class="text-gray-200 dark:text-gray-700" stroke-width="8" stroke="currentColor" fill="transparent" r="110" cx="128" cy="128" />
-                        <circle id="spinner-ring" class="opacity-60 text-green-400 dark:text-green-500" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="116" cx="128" cy="128" />
-                        <circle id="progress-ring" class="text-green-500 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="110" cx="128" cy="128" />
+                <div class="relative w-56 h-56 md:w-64 md:h-64 mb-6 md:mb-8">
+                    <svg id="timer-svg" class="w-full h-full" width="256" height="256" aria-hidden="true">
+                        <!-- Background circle -->
+                        <circle class="text-gray-200 dark:text-gray-700" stroke-width="8" stroke="currentColor"
+                            fill="transparent" r="110" cx="128" cy="128" />
+                        <!-- Spinner ring (animated when running) -->
+                        <circle id="spinner-ring" class="opacity-60 text-green-400 dark:text-green-500" stroke-width="8"
+                            stroke-linecap="round" stroke="currentColor" fill="transparent" r="116" cx="128" cy="128" />
+                        <!-- Progress ring -->
+                        <circle id="progress-ring" class="text-green-500 progress-ring__circle" stroke-width="8"
+                            stroke-linecap="round" stroke="currentColor" fill="transparent" r="110" cx="128" cy="128" />
                     </svg>
+
+                    <!-- Timer Display -->
                     <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
-                        <span id="timer-display" class="text-6xl font-bold text-gray-900 tracking-tighter dark:text-gray-100">25:00</span>
-                        <span id="status-text" class="text-green-800 font-medium mt-2 dark:text-green-300">Listo para cultivar</span>
+                        <time id="timer-display"
+                            class="text-5xl md:text-6xl font-bold text-gray-800 tracking-tighter dark:text-gray-100">
+                            25:00
+                        </time>
+                        <span id="status-text"
+                            class="text-green-600 font-medium mt-2 text-sm md:text-base dark:text-green-400">
+                            Listo para cultivar
+                        </span>
                     </div>
                 </div>
 
-                <!-- Botones de Acción -->
-                <div class="flex gap-4 w-full">
-                    <button id="toggle-btn" onclick="toggleTimer()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-4 rounded-2xl shadow-lg transform transition active:scale-95 flex items-center justify-center gap-2">
-                        <span id="icon-play">▶</span> <span id="text-play">Comenzar</span>
+                <!-- Action Buttons -->
+                <div class="flex gap-3 md:gap-4 w-full">
+                    <button id="toggle-btn" onclick="toggleTimer()"
+                        class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 md:py-4 rounded-2xl shadow-lg transform transition active:scale-95 flex items-center justify-center gap-2"
+                        aria-label="Start timer">
+                        <span id="icon-play" aria-hidden="true">▶</span>
+                        <span id="text-play">Comenzar</span>
                     </button>
-                    <button onclick="resetTimer()" class="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-4 px-6 rounded-2xl shadow transform transition active:scale-95 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200">
+                    <button onclick="resetTimer()"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-3 md:py-4 px-5 md:px-6 rounded-2xl shadow transform transition active:scale-95 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+                        aria-label="Reset timer">
                         ↺
                     </button>
                 </div>
             </div>
 
-            <!-- Leyenda -->
+            <!-- Legend -->
             <div class="glass-panel rounded-2xl p-4 text-sm">
-                <h3 id="legend-title" class="font-bold text-gray-600 mb-2 dark:text-gray-300">Tu Recompensa:</h3>
-                <ul class="space-y-2">
-                    <li id="legend-tree" class="flex items-center gap-2"><span class="text-xl">🍎/🍋</span> 25 min = Árbol Frutal</li>
-                    <li id="legend-flower" class="flex items-center gap-2"><span class="text-xl">🌻/🌹</span> 5 min = Flor</li>
-                    <li id="legend-butterfly" class="flex items-center gap-2"><span class="text-xl">🦋</span> 15 min = Mariposa (Vuela)</li>
+                <h3 id="legend-title" class="font-bold text-gray-600 mb-2 dark:text-gray-300">
+                    Tu Recompensa:
+                </h3>
+                <ul class="space-y-2" role="list">
+                    <li id="legend-tree" class="flex items-center gap-2">
+                        <span class="text-xl" aria-hidden="true">🍎/🍋</span>
+                        25 min = Árbol Frutal
+                    </li>
+                    <li id="legend-flower" class="flex items-center gap-2">
+                        <span class="text-xl" aria-hidden="true">🌻/🌹</span>
+                        5 min = Flor
+                    </li>
+                    <li id="legend-butterfly" class="flex items-center gap-2">
+                        <span class="text-xl" aria-hidden="true">🦋</span>
+                        15 min = Mariposa (Vuela)
+                    </li>
                 </ul>
             </div>
-            
-            <button id="reset-btn" onclick="clearGarden()" class="text-xs text-red-400 underline hover:text-red-600 text-center mt-2">Reiniciar Jardín (Borrar todo)</button>
-        </div>
 
-        <!-- Panel Derecho: El Jardín -->
-        <div class="w-full md:w-2/3 flex flex-col h-full relative">
-            <div class="glass-panel flex-1 rounded-3xl p-6 relative overflow-hidden flex flex-col">
-                <div class="flex justify-between items-center mb-4 z-20">
-                    <h2 id="garden-title" class="text-xl font-bold text-green-800 dark:text-green-300">Tu Jardín</h2>
-                    <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold dark:bg-green-900 dark:text-green-200">
-                        <span id="plant-label">Plantas</span>: <span id="plant-count">0</span> | <span id="butterfly-label">Mariposas</span>: <span id="butterfly-count">0</span>
-                    </span>
+            <!-- Reset Garden Button -->
+            <button id="reset-btn" onclick="clearGarden()"
+                class="text-xs text-red-400 underline hover:text-red-600 text-center transition-colors"
+                aria-label="Clear garden">
+                Reiniciar Jardín (Borrar todo)
+            </button>
+        </aside>
+
+        <!-- Right Panel: Garden -->
+        <main class="w-full md:w-2/3 flex flex-col h-full relative">
+            <div
+                class="glass-panel flex-1 rounded-3xl p-4 md:p-6 relative overflow-hidden flex flex-col min-h-[400px] md:min-h-[600px]">
+
+                <!-- Garden Header -->
+                <div class="flex justify-between items-center mb-4 z-20 relative">
+                    <h2 id="garden-title" class="text-lg md:text-xl font-bold text-green-800 dark:text-green-300">
+                        Tu Jardín
+                    </h2>
+                    <div class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold dark:bg-green-900 dark:text-green-200"
+                        role="status">
+                        <span id="plant-label">Plantas</span>: <span id="plant-count">0</span> |
+                        <span id="butterfly-label">Mariposas</span>: <span id="butterfly-count">0</span>
+                    </div>
                 </div>
 
-                <!-- Área del cielo (Para mariposas) -->
-                <div id="sky-layer" class="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-                    <!-- Las mariposas se inyectarán aquí -->
+                <!-- Sky Layer (for butterflies) -->
+                <div id="sky-layer" class="absolute inset-0 z-10 pointer-events-none overflow-hidden"
+                    aria-hidden="true">
+                    <!-- Butterflies will be injected here -->
                 </div>
 
-                <!-- Área del suelo (Para árboles y flores) -->
-                <div id="garden-grid" class="flex-1 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4 content-start overflow-y-auto z-0 p-2 pb-20">
-                    <!-- Las plantas se inyectarán aquí -->
+                <!-- Garden Grid (for trees and flowers) -->
+                <div id="garden-grid"
+                    class="flex-1 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 md:gap-4 content-start overflow-y-auto z-0 p-2 pb-20"
+                    role="region" aria-label="Garden area">
+                    <!-- Plants will be injected here -->
                 </div>
-                
-                <!-- Decoración de fondo (suelo) -->
-                <div id="ground-gradient" class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-green-200 to-transparent z-0 pointer-events-none opacity-50"></div>
+
+                <!-- Ground Decoration -->
+                <div id="ground-gradient"
+                    class="absolute bottom-0 left-0 w-full h-16 md:h-20 bg-gradient-to-t from-green-200 to-transparent z-0 pointer-events-none opacity-50"
+                    aria-hidden="true">
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 
-    <footer class="mt-6 mb-6 px-3 py-1 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
-        Feito com 💙 pelo <a href="https://instagram.com/aleqcodes" target="_blank" rel="noopener noreferrer" class="underline hover:text-green-600 dark:hover:text-green-400">@aleqcodes</a> • GitHub: <a href="https://github.com/aleqcodes" target="_blank" rel="noopener noreferrer" class="underline hover:text-green-600 dark:hover:text-green-400">@aleqcodes</a>
+    <!-- Footer -->
+    <footer class="mt-4 mb-6 px-3 py-1 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
+        Feito com 💙 pelo
+        <a href="https://instagram.com/aleqcodes" target="_blank" rel="noopener noreferrer"
+            class="underline hover:text-green-600 dark:hover:text-green-400">
+            @aleqcodes
+        </a>
+        • GitHub:
+        <a href="https://github.com/aleqcodes" target="_blank" rel="noopener noreferrer"
+            class="underline hover:text-green-600 dark:hover:text-green-400">
+            @aleqcodes
+        </a>
     </footer>
 
-    <script>
-        // --- Configuración y Estado ---
-        const MODES = {
-            focus: { time: 25 * 60, color: 'text-green-500', label: 'Enfoque', reward: 'tree' },
-            short: { time: 5 * 60, color: 'text-teal-500', label: 'Descanso Corto', reward: 'flower' },
-            long: { time: 15 * 60, color: 'text-indigo-500', label: 'Descanso Largo', reward: 'butterfly' }
-        };
+    <!-- JavaScript Modules (order matters) -->
+    <script src="js/i18n.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/garden.js"></script>
+    <script src="js/app.js"></script>
 
-        const ASSETS = {
-            tree: ['🌳', '🌴'],
-            flower: ['🌻', '🌹', '🌷', '🌺', '🌸', '🌼', '🪷'],
-            butterfly: ['🦋']
-        };
-
-        const FRUITS_GENERAL = ['🍎','🍋','🍊','🍑','🍐','🍅','🍒','🍇','🥭','🍓'];
-        const FRUITS_PALM = ['🥥'];
-
-        let timeLeft = MODES.focus.time;
-        let currentMode = 'focus';
-        let timerId = null;
-        let isRunning = false;
-        let startTs = null;
-        let endTs = null;
-        let spinnerRAF = null;
-        let spinnerOffset = 0;
-        let spinnerCirc = 0;
-        
-        // Cargar estado inicial del jardín o crear vacío
-        let gardenState = JSON.parse(localStorage.getItem('pomodoroGarden')) || [];
-
-        // Elementos DOM
-        const timerDisplay = document.getElementById('timer-display');
-        const statusText = document.getElementById('status-text');
-        const playBtn = document.getElementById('toggle-btn');
-        const iconPlay = document.getElementById('icon-play');
-        const textPlay = document.getElementById('text-play');
-        const progressRing = document.getElementById('progress-ring');
-        const spinnerRing = document.getElementById('spinner-ring');
-        const gardenGrid = document.getElementById('garden-grid');
-        const skyLayer = document.getElementById('sky-layer');
-        const plantCountEl = document.getElementById('plant-count');
-        const butterflyCountEl = document.getElementById('butterfly-count');
-        const alarmSound = document.getElementById('alarm-sound');
-        const langBtnEs = document.getElementById('lang-es');
-        const langBtnPt = document.getElementById('lang-pt');
-        const langBtnEn = document.getElementById('lang-en');
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const titleEl = document.getElementById('app-title');
-        const subtitleEl = document.getElementById('app-subtitle');
-        const legendTitleEl = document.getElementById('legend-title');
-        const legendTreeEl = document.getElementById('legend-tree');
-        const legendFlowerEl = document.getElementById('legend-flower');
-        const legendButterflyEl = document.getElementById('legend-butterfly');
-        const gardenTitleEl = document.getElementById('garden-title');
-        const resetBtnEl = document.getElementById('reset-btn');
-        const plantLabelEl = document.getElementById('plant-label');
-        const butterflyLabelEl = document.getElementById('butterfly-label');
-
-        const I18N = {
-            es: {
-                title: '🍅 Jardín Pomodoro',
-                subtitle: 'Concéntrate y cultiva tu bosque',
-                mode_focus: 'Enfoque',
-                mode_short: 'Descanso Corto',
-                mode_long: 'Descanso Largo',
-                status_ready: 'Listo para cultivar',
-                status_growing: 'Creciendo...',
-                status_paused: 'En pausa',
-                btn_start: 'Comenzar',
-                btn_pause: 'Pausar',
-                btn_resume: 'Continuar',
-                legend_title: 'Tu Recompensa:',
-                legend_tree: '25 min = Árbol Frutal',
-                legend_flower: '5 min = Flor',
-                legend_butterfly: '15 min = Mariposa (Vuela)',
-                garden_title: 'Tu Jardín',
-                reset_btn: 'Reiniciar Jardín (Borrar todo)',
-                clear_confirm: '¿Estás seguro de que quieres talar todo tu bosque? Esta acción no se puede deshacer.',
-                mode_change_confirm: 'El temporizador está corriendo. ¿Quieres detenerlo y cambiar de modo?',
-                alert_tree: '¡Tiempo completado! Has cultivado: Un Árbol',
-                alert_flower: '¡Tiempo completado! Has cultivado: Una Flor',
-                alert_butterfly: '¡Tiempo completado! Has cultivado: Una Mariposa',
-                doc_label_focus: 'Enfoque',
-                doc_label_short: 'Descanso Corto',
-                doc_label_long: 'Descanso Largo',
-                plants_label: 'Plantas',
-                butterflies_label: 'Mariposas',
-                toggle_to_dark: '🌚 Oscuro',
-                toggle_to_light: '🌞 Claro',
-                name_prompt: 'Nombre del árbol:'
-            },
-            pt: {
-                title: '🍅 Jardim Pomodoro',
-                subtitle: 'Concentre-se e cultive sua floresta',
-                mode_focus: 'Foco',
-                mode_short: 'Pausa Curta',
-                mode_long: 'Pausa Longa',
-                status_ready: 'Pronto para cultivar',
-                status_growing: 'Crescendo...',
-                status_paused: 'Pausado',
-                btn_start: 'Começar',
-                btn_pause: 'Pausar',
-                btn_resume: 'Continuar',
-                legend_title: 'Sua Recompensa:',
-                legend_tree: '25 min = Árvore Frutífera',
-                legend_flower: '5 min = Flor',
-                legend_butterfly: '15 min = Borboleta (Voa)',
-                garden_title: 'Seu Jardim',
-                reset_btn: 'Reiniciar Jardim (Apagar tudo)',
-                clear_confirm: 'Tem certeza que deseja derrubar todo o bosque? Esta ação não pode ser desfeita.',
-                mode_change_confirm: 'O temporizador está em execução. Deseja parar e trocar o modo?',
-                alert_tree: 'Tempo concluído! Você cultivou: Uma Árvore',
-                alert_flower: 'Tempo concluído! Você cultivou: Uma Flor',
-                alert_butterfly: 'Tempo concluído! Você cultivou: Uma Borboleta',
-                doc_label_focus: 'Foco',
-                doc_label_short: 'Pausa Curta',
-                doc_label_long: 'Pausa Longa',
-                plants_label: 'Plantas',
-                butterflies_label: 'Borboletas',
-                toggle_to_dark: '🌚 Escuro',
-                toggle_to_light: '🌞 Claro',
-                name_prompt: 'Nome da árvore:'
-            },
-            en: {
-                title: '🍅 Pomodoro Garden',
-                subtitle: 'Focus and grow your forest',
-                mode_focus: 'Focus',
-                mode_short: 'Short Break',
-                mode_long: 'Long Break',
-                status_ready: 'Ready to grow',
-                status_growing: 'Growing...',
-                status_paused: 'Paused',
-                btn_start: 'Start',
-                btn_pause: 'Pause',
-                btn_resume: 'Resume',
-                legend_title: 'Your Reward:',
-                legend_tree: '25 min = Fruit Tree',
-                legend_flower: '5 min = Flower',
-                legend_butterfly: '15 min = Butterfly (Flies)',
-                garden_title: 'Your Garden',
-                reset_btn: 'Reset Garden (Erase all)',
-                clear_confirm: 'Are you sure you want to clear the forest? This action cannot be undone.',
-                mode_change_confirm: 'The timer is running. Do you want to stop and change mode?',
-                alert_tree: 'Time complete! You cultivated: A Tree',
-                alert_flower: 'Time complete! You cultivated: A Flower',
-                alert_butterfly: 'Time complete! You cultivated: A Butterfly',
-                doc_label_focus: 'Focus',
-                doc_label_short: 'Short Break',
-                doc_label_long: 'Long Break',
-                plants_label: 'Plants',
-                butterflies_label: 'Butterflies',
-                toggle_to_dark: '🌚 Dark',
-                toggle_to_light: '🌞 Light',
-                name_prompt: 'Tree name:'
-            }
-        };
-
-        let currentLang = localStorage.getItem('pomodoroLang') || 'es';
-
-        function t(key) {
-            const dict = I18N[currentLang] || I18N.es;
-            return dict[key] || key;
-        }
-
-        function updateLangButtons() {
-            [langBtnEs, langBtnPt, langBtnEn].forEach(btn => { if (btn) btn.classList.remove('opacity-100','ring-1','ring-gray-300'); });
-            const map = { es: langBtnEs, pt: langBtnPt, en: langBtnEn };
-            const active = map[currentLang];
-            if (active) { active.classList.add('opacity-100','ring-1','ring-gray-300'); }
-        }
-
-        function applyLanguage() {
-            if (titleEl) titleEl.textContent = t('title');
-            if (subtitleEl) subtitleEl.textContent = t('subtitle');
-            const bf = document.getElementById('btn-focus');
-            const bs = document.getElementById('btn-short');
-            const bl = document.getElementById('btn-long');
-            if (bf) bf.textContent = t('mode_focus');
-            if (bs) bs.textContent = t('mode_short');
-            if (bl) bl.textContent = t('mode_long');
-            if (legendTitleEl) legendTitleEl.textContent = t('legend_title');
-            if (legendTreeEl) legendTreeEl.innerHTML = '<span class="text-xl">🍎/🍋</span> ' + t('legend_tree');
-            if (legendFlowerEl) legendFlowerEl.innerHTML = '<span class="text-xl">🌻/🌹</span> ' + t('legend_flower');
-            if (legendButterflyEl) legendButterflyEl.innerHTML = '<span class="text-xl">🦋</span> ' + t('legend_butterfly');
-            if (gardenTitleEl) gardenTitleEl.textContent = t('garden_title');
-            if (resetBtnEl) resetBtnEl.textContent = t('reset_btn');
-            if (plantLabelEl) plantLabelEl.textContent = t('plants_label');
-            if (butterflyLabelEl) butterflyLabelEl.textContent = t('butterflies_label');
-            const totalTime = MODES[currentMode].time;
-            const paused = !isRunning && timeLeft > 0 && timeLeft < totalTime;
-            if (statusText) statusText.textContent = isRunning ? t('status_growing') : paused ? t('status_paused') : t('status_ready');
-            if (textPlay) textPlay.textContent = isRunning ? t('btn_pause') : paused ? t('btn_resume') : t('btn_start');
-            updateStatusColor();
-            updateThemeButtonLabel();
-            updateLangButtons();
-            updateDisplay();
-            
-        }
-
-        function updateStatusColor() {
-            const base = MODES[currentMode].color;
-            if (statusText) statusText.className = `font-medium mt-2 ${base} dark:${base}`;
-        }
-
-        function updateThemeButtonLabel() {
-            const isDark = document.documentElement.classList.contains('dark');
-            if (themeToggleBtn) themeToggleBtn.textContent = isDark ? t('toggle_to_light') : t('toggle_to_dark');
-        }
-
-        function setTheme(theme) {
-            if (theme === 'dark') document.documentElement.classList.add('dark');
-            else document.documentElement.classList.remove('dark');
-            try { localStorage.setItem('pomodoroTheme', theme); } catch(e) {}
-            updateThemeButtonLabel();
-        }
-
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.contains('dark');
-            setTheme(isDark ? 'light' : 'dark');
-        }
-
-        function setLang(lang) {
-            currentLang = lang;
-            try { localStorage.setItem('pomodoroLang', lang); } catch(e) {}
-            applyLanguage();
-        }
-
-        function getGridColumnCount() {
-            const styles = window.getComputedStyle(gardenGrid);
-            const cols = styles.gridTemplateColumns.split(' ').filter(Boolean).length;
-            return Math.max(cols, 1);
-        }
-
-        function cellKey(c, r) { return `${c}-${r}`; }
-
-        function findFreeCell(cols, used) {
-            const usedRows = Array.from(used).map(k => parseInt(k.split('-')[1], 10));
-            const maxRow = usedRows.length ? Math.max(...usedRows) : 0;
-            for (let attempt = 0; attempt < 200; attempt++) {
-                const col = 1 + Math.floor(Math.random() * cols);
-                const row = 1 + Math.floor(Math.random() * (maxRow + 3));
-                const key = cellKey(col, row);
-                if (!used.has(key)) return { col, row };
-            }
-            for (let row = 1; row < maxRow + 100; row++) {
-                for (let col = 1; col <= cols; col++) {
-                    const key = cellKey(col, row);
-                    if (!used.has(key)) return { col, row };
-                }
-            }
-            return { col: 1, row: maxRow + 1 };
-        }
-
-        function ensureGroundPosition(item, used, cols) {
-            if (!item.col || !item.row) {
-                const pos = findFreeCell(cols, used);
-                item.col = pos.col;
-                item.row = pos.row;
-                saveGarden();
-            }
-            const k = cellKey(item.col, item.row);
-            if (used.has(k)) {
-                const pos = findFreeCell(cols, used);
-                item.col = pos.col;
-                item.row = pos.row;
-                saveGarden();
-            }
-            used.add(cellKey(item.col, item.row));
-        }
-
-        function skyGridConfig() {
-            const rect = skyLayer.getBoundingClientRect();
-            const cols = Math.max(Math.floor(rect.width / 80), 6);
-            const rows = Math.max(Math.floor(rect.height / 80), 4);
-            return { cols, rows };
-        }
-
-        function findFreeSkyCell(used, cfg) {
-            for (let attempt = 0; attempt < 200; attempt++) {
-                const col = 1 + Math.floor(Math.random() * cfg.cols);
-                const row = 1 + Math.floor(Math.random() * cfg.rows);
-                const key = cellKey(col, row);
-                if (!used.has(key)) return { col, row };
-            }
-            return { col: 1, row: 1 };
-        }
-
-        function skyCellToPercent(col, row, cfg) {
-            const left = ((col - 0.5) / cfg.cols) * 100;
-            const top = ((row - 0.5) / cfg.rows) * 100;
-            return { left, top };
-        }
-
-        
-        
-        const radius = progressRing.r.baseVal.value;
-        const circumference = radius * 2 * Math.PI;
-        progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
-        progressRing.style.strokeDashoffset = circumference;
-        if (spinnerRing) {
-            const sRadius = spinnerRing.r.baseVal.value;
-            spinnerCirc = sRadius * 2 * Math.PI;
-            const seg = Math.max(80, Math.min(220, Math.round(spinnerCirc * 0.25)));
-            spinnerRing.style.setProperty('stroke-dasharray', `${seg} ${spinnerCirc - seg}`);
-            spinnerRing.style.setProperty('stroke-dashoffset', '0');
-        }
-        
-        applyLanguage();
-
-        function startSpinner() {
-            if (!spinnerRing || spinnerRAF) return;
-            spinnerOffset = 0;
-            let last = performance.now();
-            const speed = 400; // units per second
-            const loop = (ts) => {
-                const dt = ts - last;
-                last = ts;
-                spinnerOffset = (spinnerOffset + (dt / 1000) * speed) % spinnerCirc;
-                spinnerRing.style.strokeDashoffset = -spinnerOffset;
-                spinnerRAF = requestAnimationFrame(loop);
-            };
-            spinnerRAF = requestAnimationFrame(loop);
-        }
-
-        function stopSpinner() {
-            if (spinnerRAF) {
-                cancelAnimationFrame(spinnerRAF);
-                spinnerRAF = null;
-            }
-            if (spinnerRing) spinnerRing.style.strokeDashoffset = 0;
-        }
-
-        // --- Funciones Principales ---
-
-        function setProgress(percent) {
-            const offset = circumference - (percent / 100) * circumference;
-            progressRing.style.strokeDashoffset = offset;
-        }
-
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60);
-            const s = seconds % 60;
-            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        }
-
-        function updateDisplay() {
-            timerDisplay.textContent = formatTime(timeLeft);
-            const totalTime = MODES[currentMode].time;
-            const percent = ((totalTime - timeLeft) / totalTime) * 100;
-            setProgress(percent);
-            document.title = `${formatTime(timeLeft)} - ${t('doc_label_' + currentMode)}`;
-        }
-
-        function toggleTimer() {
-            if (isRunning) {
-                pauseTimer();
-            } else {
-                startTimer();
-            }
-        }
-
-        function startTimer() {
-            if (isRunning) return;
-            if (timeLeft <= 0) timeLeft = MODES[currentMode].time;
-            isRunning = true;
-            playBtn.classList.replace('bg-green-500', 'bg-yellow-500');
-            playBtn.classList.replace('hover:bg-green-600', 'hover:bg-yellow-600');
-            iconPlay.textContent = '⏸';
-            textPlay.textContent = t('btn_pause');
-            statusText.textContent = t('status_growing');
-            startSpinner();
-            startTs = Date.now();
-            endTs = startTs + timeLeft * 1000;
-            timerId = setInterval(() => {
-                const remain = Math.max(0, Math.floor((endTs - Date.now()) / 1000));
-                if (remain !== timeLeft) {
-                    timeLeft = remain;
-                    updateDisplay();
-                }
-                if (remain <= 0) {
-                    completeCycle();
-                }
-            }, 250);
-        }
-
-        function pauseTimer() {
-            clearInterval(timerId);
-            timerId = null;
-            isRunning = false;
-            playBtn.classList.replace('bg-yellow-500', 'bg-green-500');
-            playBtn.classList.replace('hover:bg-yellow-600', 'hover:bg-green-600');
-            iconPlay.textContent = '▶';
-            textPlay.textContent = t('btn_resume');
-            statusText.textContent = t('status_paused');
-            stopSpinner();
-        }
-
-        function resetTimer() {
-            pauseTimer();
-            timeLeft = MODES[currentMode].time;
-            updateDisplay();
-            statusText.textContent = t('status_ready');
-            setProgress(0);
-            textPlay.textContent = t('btn_start');
-            stopSpinner();
-        }
-
-        function setMode(mode) {
-            if (isRunning) {
-                const confirmChange = confirm(t('mode_change_confirm'));
-                if (!confirmChange) return;
-            }
-            
-            pauseTimer();
-            currentMode = mode;
-            timeLeft = MODES[mode].time;
-            
-            // Actualizar botones activos
-            document.querySelectorAll('[id^="btn-"]').forEach(btn => {
-                btn.className = 'flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400';
-            });
-            const activeBtn = document.getElementById(`btn-${mode}`);
-            activeBtn.className = 'flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all bg-white shadow-sm text-green-600 border border-green-100 dark:bg-gray-900 dark:text-green-400 dark:border dark:border-green-900';
-
-            // Cambiar color del anillo
-            progressRing.setAttribute('class', `progress-ring__circle ${MODES[mode].color}`);
-            updateStatusColor();
-
-            resetTimer();
-        }
-
-        function completeCycle() {
-            pauseTimer();
-            timeLeft = 0;
-            updateDisplay();
-            try { alarmSound.play(); } catch(e) {}
-            const rewardType = MODES[currentMode].reward;
-            addRewardToGarden(rewardType);
-            alert(rewardType === 'tree' ? t('alert_tree') : rewardType === 'flower' ? t('alert_flower') : t('alert_butterfly'));
-            textPlay.textContent = t('btn_start');
-            statusText.textContent = t('status_ready');
-            stopSpinner();
-        }
-
-        // --- Lógica del Jardín ---
-
-        function getRandomItem(array) {
-            return array[Math.floor(Math.random() * array.length)];
-        }
-
-        function addRewardToGarden(type) {
-            const item = {
-                type: type,
-                emoji: getRandomItem(ASSETS[type]),
-                id: Date.now(),
-                delay: Math.random() * 1.2
-            };
-            gardenState.push(item);
-            saveGarden();
-            renderGarden();
-        }
-
-        function saveGarden() {
-            localStorage.setItem('pomodoroGarden', JSON.stringify(gardenState));
-        }
-
-        function renderGarden() {
-            gardenGrid.innerHTML = '';
-            skyLayer.innerHTML = '';
-
-            const cols = getGridColumnCount();
-            const used = new Set();
-
-            let plants = 0;
-            let butterflies = 0;
-
-            const skyUsed = new Set();
-            const cfg = skyGridConfig();
-
-            gardenState.forEach(item => {
-                if (item.type === 'butterfly') {
-                    butterflies++;
-                } else {
-                    plants++;
-                }
-            });
-
-            plantCountEl.textContent = plants;
-            butterflyCountEl.textContent = butterflies;
-
-            gardenState.forEach(item => {
-                if (item.type === 'butterfly') {
-                    if (item.left == null || item.top == null) {
-                        const cell = findFreeSkyCell(skyUsed, cfg);
-                        skyUsed.add(cellKey(cell.col, cell.row));
-                        const pct = skyCellToPercent(cell.col, cell.row, cfg);
-                        item.left = pct.left;
-                        item.top = pct.top;
-                        saveGarden();
-                    } else {
-                        const col = Math.max(1, Math.min(cfg.cols, Math.round((item.left / 100) * cfg.cols)));
-                        const row = Math.max(1, Math.min(cfg.rows, Math.round((item.top / 100) * cfg.rows)));
-                        skyUsed.add(cellKey(col, row));
-                    }
-                    const el = document.createElement('div');
-                    el.className = 'butterfly';
-                    el.textContent = item.emoji;
-                    el.style.left = item.left + '%';
-                    el.style.top = item.top + '%';
-                    el.style.animationDelay = (item.delay || 0) + 's';
-                    skyLayer.appendChild(el);
-                } else {
-                    ensureGroundPosition(item, used, cols);
-                    let el;
-                    if (item.type === 'tree') {
-                        el = createTreeElement(item);
-                    } else {
-                        el = createFlowerElement(item);
-                    }
-                    el.style.gridColumnStart = item.col;
-                    el.style.gridRowStart = item.row;
-                    gardenGrid.appendChild(el);
-                }
-            });
-
-            if (plants > 0) {
-                gardenGrid.scrollTop = gardenGrid.scrollHeight;
-            }
-        }
-
-        function createTreeElement(item) {
-            const el = document.createElement('div');
-            el.className = 'garden-item plant-item flex justify-center items-center h-20 w-20 bg-white/30 rounded-xl shadow-sm backdrop-blur-sm dark:bg-white/5';
-            const trunk = document.createElement('span');
-            trunk.textContent = item.emoji || getRandomItem(ASSETS.tree);
-            trunk.style.fontSize = '2rem';
-            el.appendChild(trunk);
-
-            const trunkEmoji = trunk.textContent;
-            const isPalm = trunkEmoji === '🌴';
-
-            const invalidForType = () => {
-                if (!item.fruits) return true;
-                const distinct = new Set(item.fruits);
-                if (distinct.size > 1) return true;
-                if (isPalm) return item.fruits.some(f => f !== '🥥');
-                return item.fruits.some(f => f === '🥥');
-            };
-
-            if (!item.fruits || !item.fruitPositions || item.fruits.length !== item.fruitPositions.length || invalidForType()) {
-                const count = 3 + Math.floor(Math.random() * 3);
-                const pool = isPalm ? FRUITS_PALM : FRUITS_GENERAL;
-                const fruitType = getRandomItem(pool);
-                item.fruits = Array.from({ length: count }, () => fruitType);
-                item.fruitPositions = Array.from({ length: count }, () => ({ left: 15 + Math.random() * 70, top: 10 + Math.random() * 55 }));
-                saveGarden();
-            }
-
-            item.fruits.forEach((fruit, i) => {
-                const f = document.createElement('span');
-                f.textContent = fruit;
-                f.style.position = 'absolute';
-                f.style.left = item.fruitPositions[i].left + '%';
-                f.style.top = item.fruitPositions[i].top + '%';
-                f.style.fontSize = '1rem';
-                el.appendChild(f);
-            });
-
-            if (item.name) {
-                const nameEl = document.createElement('div');
-                nameEl.textContent = item.name;
-                nameEl.className = 'absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/50 dark:bg-white/10';
-                el.appendChild(nameEl);
-            }
-
-            el.addEventListener('click', () => {
-                const name = prompt(t('name_prompt'), item.name || '');
-                if (name !== null) {
-                    item.name = name.trim();
-                    saveGarden();
-                    renderGarden();
-                }
-            });
-
-            el.style.animationDelay = (item.delay || Math.random() * 0.8) + 's';
-            return el;
-        }
-
-        function createFlowerElement(item) {
-            const el = document.createElement('div');
-            el.className = 'garden-item plant-item flex justify-center items-center h-16 w-16 bg-white/30 rounded-xl shadow-sm backdrop-blur-sm dark:bg-white/5';
-            const s = document.createElement('span');
-            s.textContent = item.emoji;
-            s.style.fontSize = '1.5rem';
-            el.appendChild(s);
-            el.style.animationDelay = (item.delay || Math.random() * 0.8) + 's';
-            return el;
-        }
-
-        function clearGarden() {
-            if(confirm(t('clear_confirm'))) {
-                gardenState = [];
-                saveGarden();
-                renderGarden();
-            }
-        }
-
-        // Inicialización
-        setMode('focus'); // Default
-        renderGarden(); // Cargar jardín guardado
-        
-        // Solicitar permiso notificaciones (Opcional, no crítico)
-        if ("Notification" in window) {
-            Notification.requestPermission();
-        }
-
-    </script>
 </body>
+
 </html>

@@ -1,0 +1,628 @@
+/* ============================================
+   POMODORO GARDEN - STYLES
+   Beautiful, responsive garden-themed design
+   ============================================ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+   ============================================ */
+:root {
+    /* Colors - Light Theme */
+    --color-sky-start: #87CEEB;
+    --color-sky-end: #E0F6FF;
+    --color-grass-start: #90EE90;
+    --color-grass-end: #F0FFF0;
+    --color-soil: #8B7355;
+    --color-soil-dark: #6B5345;
+
+    --color-primary: #22c55e;
+    --color-primary-dark: #16a34a;
+    --color-primary-light: #86efac;
+
+    --color-secondary: #10b981;
+    --color-accent: #fbbf24;
+
+    --color-text: #374151;
+    --color-text-light: #6b7280;
+    --color-text-lighter: #9ca3af;
+
+    --color-bg-glass: rgba(255, 255, 255, 0.85);
+    --color-border-glass: rgba(255, 255, 255, 0.5);
+    --color-shadow: rgba(0, 0, 0, 0.1);
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+
+    /* Border Radius */
+    --radius-sm: 0.5rem;
+    --radius-md: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+    --transition-slow: 350ms ease;
+}
+
+/* Dark Theme */
+.dark {
+    --color-sky-start: #0f172a;
+    --color-sky-end: #1e293b;
+    --color-grass-start: #064e3b;
+    --color-grass-end: #052e2b;
+    --color-soil: #44403c;
+    --color-soil-dark: #292524;
+
+    --color-primary: #34d399;
+    --color-primary-dark: #10b981;
+    --color-primary-light: #6ee7b7;
+
+    --color-text: #e5e7eb;
+    --color-text-light: #d1d5db;
+    --color-text-lighter: #9ca3af;
+
+    --color-bg-glass: rgba(17, 24, 39, 0.8);
+    --color-border-glass: rgba(255, 255, 255, 0.08);
+    --color-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--color-sky-start) 0%, var(--color-sky-end) 100%);
+    color: var(--color-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   SCROLLBAR CUSTOMIZATION
+   ============================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary-light);
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-normal);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #4b5563;
+}
+
+/* ============================================
+   GLASS PANEL COMPONENT
+   ============================================ */
+.glass-panel {
+    background: var(--color-bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-border-glass);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-normal);
+}
+
+.glass-panel:hover {
+    box-shadow: var(--shadow-xl);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* Plant Growth Animation */
+@keyframes grow {
+    0% {
+        transform: scale(0) translateY(20px);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.15) translateY(-5px);
+    }
+
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Butterfly Flutter Animation */
+@keyframes flutter {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    25% {
+        transform: translate(15px, -20px) rotate(8deg) scale(0.95);
+    }
+
+    50% {
+        transform: translate(-8px, -35px) rotate(-8deg) scale(1.05);
+    }
+
+    75% {
+        transform: translate(-20px, -15px) rotate(8deg) scale(0.98);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+}
+
+/* Gentle Sway Animation for Plants */
+@keyframes sway {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(1deg);
+    }
+
+    75% {
+        transform: rotate(-1deg);
+    }
+}
+
+/* Pulse Animation for Active States */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Spinner Animation */
+@keyframes dashSpin {
+    to {
+        stroke-dashoffset: -1000;
+    }
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Float Animation */
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* ============================================
+   GARDEN COMPONENTS
+   ============================================ */
+
+/* Plant Items */
+.plant-item {
+    animation: grow 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    font-size: 2.5rem;
+    user-select: none;
+    transition: transform var(--transition-normal), filter var(--transition-normal), box-shadow var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+    will-change: transform;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.plant-item:hover {
+    transform: scale(1.15);
+    filter: brightness(1.15) drop-shadow(0 6px 12px rgba(34, 197, 94, 0.3)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    z-index: 10;
+}
+
+.plant-item:active {
+    transform: scale(1.05);
+}
+
+/* Add gentle sway to plants */
+.plant-item.tree {
+    animation: grow 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+        sway 4s ease-in-out infinite;
+    animation-delay: 0s, 1s;
+}
+
+.plant-item.flower {
+    animation: grow 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
+        float 3s ease-in-out infinite;
+    animation-delay: 0s, 0.5s;
+}
+
+/* Sky Decorations */
+#sky-layer::before {
+    content: '☁️';
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    font-size: 3rem;
+    opacity: 0.3;
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+#sky-layer::after {
+    content: '☁️';
+    position: absolute;
+    top: 20%;
+    right: 20%;
+    font-size: 2.5rem;
+    opacity: 0.25;
+    animation: float 10s ease-in-out infinite reverse;
+    pointer-events: none;
+}
+
+.dark #sky-layer::before {
+    content: '🌙';
+    top: 5%;
+    right: 10%;
+    left: auto;
+    font-size: 2rem;
+    opacity: 0.4;
+}
+
+.dark #sky-layer::after {
+    content: '⭐';
+    top: 15%;
+    left: 10%;
+    right: auto;
+    font-size: 1.5rem;
+    opacity: 0.5;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+/* Butterfly */
+.butterfly {
+    position: absolute;
+    font-size: 2rem;
+    animation: flutter 3.5s infinite ease-in-out alternate;
+    z-index: 10;
+    pointer-events: none;
+    filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.15));
+    will-change: transform;
+}
+
+/* Garden Grid */
+#garden-grid {
+    position: relative;
+}
+
+/* Enhanced Ground Gradient with Soil and Grass */
+#ground-gradient {
+    background: linear-gradient(to top,
+            #6B4423 0%,
+            /* Dark soil */
+            #8B7355 15%,
+            /* Medium soil */
+            #A0826D 30%,
+            /* Light soil */
+            #90C695 45%,
+            /* Grass transition */
+            #A8D5A8 55%,
+            /* Light grass */
+            rgba(168, 213, 168, 0.6) 70%,
+            rgba(168, 213, 168, 0.3) 85%,
+            transparent 100%);
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity var(--transition-normal);
+}
+
+.dark #ground-gradient {
+    background: linear-gradient(to top,
+            #3d2817 0%,
+            /* Dark soil in dark mode */
+            #4a3319 15%,
+            #5a4a2a 30%,
+            rgba(34, 197, 94, 0.3) 45%,
+            rgba(34, 197, 94, 0.2) 60%,
+            rgba(34, 197, 94, 0.1) 80%,
+            transparent 100%);
+    opacity: 0.6;
+}
+
+/* ============================================
+   TIMER COMPONENTS
+   ============================================ */
+
+/* Progress Ring */
+.progress-ring__circle {
+    transition: stroke-dashoffset var(--transition-slow);
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    will-change: stroke-dashoffset;
+}
+
+.ring-dash {
+    will-change: stroke-dashoffset;
+    animation: dashSpin 2.2s linear infinite;
+}
+
+/* Timer Display */
+#timer-display {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.05em;
+}
+
+/* ============================================
+   BUTTONS & CONTROLS
+   ============================================ */
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all var(--transition-normal);
+}
+
+button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Primary Button */
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    font-weight: 600;
+    box-shadow: var(--shadow-md), 0 0 0 0 rgba(34, 197, 94, 0.4);
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(34, 197, 94, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm), 0 0 0 0 rgba(34, 197, 94, 0.4);
+}
+
+/* Timer Complete Sparkle Effect */
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1) rotate(180deg);
+    }
+}
+
+.timer-complete {
+    animation: sparkle 0.6s ease-in-out;
+}
+
+/* Language & Theme Buttons */
+.btn-lang,
+.btn-theme {
+    transition: all var(--transition-fast);
+}
+
+.btn-lang:hover,
+.btn-theme:hover {
+    transform: scale(1.05);
+}
+
+.btn-lang.active {
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+/* ============================================
+   LAYOUT & STRUCTURE
+   ============================================ */
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header */
+header h1 {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* Footer */
+footer a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+footer a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.shadow-glow {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Mobile First Approach */
+@media (max-width: 640px) {
+    :root {
+        --spacing-lg: 1rem;
+        --spacing-xl: 1.5rem;
+        --spacing-2xl: 2rem;
+    }
+
+    .plant-item {
+        font-size: 2rem;
+    }
+
+    .butterfly {
+        font-size: 1.5rem;
+    }
+
+    #timer-display {
+        font-size: 3rem !important;
+    }
+}
+
+/* Tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .plant-item {
+        font-size: 2.25rem;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+    .plant-item:hover {
+        transform: scale(1.2);
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .glass-panel {
+        border-width: 2px;
+    }
+
+    button:focus-visible {
+        outline-width: 3px;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    body {
+        background: white;
+    }
+
+    .glass-panel {
+        border: 1px solid #ccc;
+        background: white;
+    }
+
+    button,
+    .butterfly {
+        display: none;
+    }
+}
