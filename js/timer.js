@@ -35,24 +35,15 @@ window.timerState = {
     endTs: null
 };
 
-// Spinner animation state
-let spinnerRAF = null;
-let spinnerOffset = 0;
-let spinnerCirc = 0;
-
 // DOM elements (initialized in initTimer)
 let timerDisplay = null;
 let statusText = null;
 let playBtn = null;
 let iconPlay = null;
 let textPlay = null;
-let progressRing = null;
-let spinnerRing = null;
+let progressWrapper = null;
+let spinnerWrapper = null;
 let alarmSound = null;
-
-// Progress ring properties
-let radius = 0;
-let circumference = 0;
 
 /**
  * Initialize timer module
@@ -64,26 +55,9 @@ function initTimer() {
     playBtn = document.getElementById('toggle-btn');
     iconPlay = document.getElementById('icon-play');
     textPlay = document.getElementById('text-play');
-    progressRing = document.getElementById('progress-ring');
-    spinnerRing = document.getElementById('spinner-ring');
+    progressWrapper = document.getElementById('progress-wrapper');
+    spinnerWrapper = document.getElementById('spinner-wrapper');
     alarmSound = document.getElementById('alarm-sound');
-
-    // Initialize progress ring
-    if (progressRing) {
-        radius = progressRing.r.baseVal.value;
-        circumference = radius * 2 * Math.PI;
-        progressRing.style.strokeDasharray = `${circumference} ${circumference}`;
-        progressRing.style.strokeDashoffset = circumference;
-    }
-
-    // Initialize spinner ring
-    if (spinnerRing) {
-        const sRadius = spinnerRing.r.baseVal.value;
-        spinnerCirc = sRadius * 2 * Math.PI;
-        const seg = Math.max(80, Math.min(220, Math.round(spinnerCirc * 0.25)));
-        spinnerRing.style.setProperty('stroke-dasharray', `${seg} ${spinnerCirc - seg}`);
-        spinnerRing.style.setProperty('stroke-dashoffset', '0');
-    }
 
     // Set initial mode and display
     setMode('focus');
@@ -118,48 +92,36 @@ function updateDisplay() {
 }
 
 /**
- * Set progress ring percentage
+ * Set progress circle percentage using CSS custom property
  * @param {number} percent - Progress percentage (0-100)
  */
 function setProgress(percent) {
-    if (!progressRing) return;
+    if (!progressWrapper) return;
 
-    const offset = circumference - (percent / 100) * circumference;
-    progressRing.style.strokeDashoffset = offset;
+    // Convert percent to degrees (0-360)
+    const degrees = (percent / 100) * 360;
+
+    // Update CSS custom property for conic-gradient
+    const circle = progressWrapper.querySelector('.timer-progress-circle');
+    if (circle) {
+        circle.style.setProperty('--progress', `${degrees}deg`);
+    }
 }
 
 /**
  * Start spinner animation
  */
 function startSpinner() {
-    if (!spinnerRing || spinnerRAF) return;
-
-    spinnerOffset = 0;
-    let last = performance.now();
-    const speed = 400; // units per second
-
-    const loop = (ts) => {
-        const dt = ts - last;
-        last = ts;
-        spinnerOffset = (spinnerOffset + (dt / 1000) * speed) % spinnerCirc;
-        spinnerRing.style.strokeDashoffset = -spinnerOffset;
-        spinnerRAF = requestAnimationFrame(loop);
-    };
-
-    spinnerRAF = requestAnimationFrame(loop);
+    if (!spinnerWrapper) return;
+    spinnerWrapper.classList.add('active');
 }
 
 /**
  * Stop spinner animation
  */
 function stopSpinner() {
-    if (spinnerRAF) {
-        cancelAnimationFrame(spinnerRAF);
-        spinnerRAF = null;
-    }
-    if (spinnerRing) {
-        spinnerRing.style.strokeDashoffset = 0;
-    }
+    if (!spinnerWrapper) return;
+    spinnerWrapper.classList.remove('active');
 }
 
 /**
@@ -337,11 +299,6 @@ function setMode(mode) {
     const activeBtn = document.getElementById(`btn-${mode}`);
     if (activeBtn) {
         activeBtn.className = 'flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all bg-white shadow-sm text-green-600 border border-green-100 dark:bg-gray-900 dark:text-green-400 dark:border dark:border-green-900';
-    }
-
-    // Update progress ring color
-    if (progressRing) {
-        progressRing.setAttribute('class', `progress-ring__circle ${MODES[mode].color}`);
     }
 
     resetTimer();
