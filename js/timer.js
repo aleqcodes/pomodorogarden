@@ -127,6 +127,9 @@ function stopSpinner() {
 /**
  * Start timer
  */
+/**
+ * Start timer
+ */
 function startTimer() {
     if (window.timerState.isRunning) return;
 
@@ -138,9 +141,13 @@ function startTimer() {
 
     // Update button appearance
     if (playBtn) {
-        playBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
-        playBtn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+        playBtn.classList.add('running');
     }
+    const timerContainer = document.querySelector('.timer-container');
+    if (timerContainer) {
+        timerContainer.classList.add('running');
+    }
+
     if (iconPlay) iconPlay.textContent = '⏸';
     if (textPlay) textPlay.textContent = t('btn_pause');
     if (statusText) statusText.textContent = t('status_growing');
@@ -179,9 +186,13 @@ function pauseTimer() {
 
     // Update button appearance
     if (playBtn) {
-        playBtn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600');
-        playBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+        playBtn.classList.remove('running');
     }
+    const timerContainer = document.querySelector('.timer-container');
+    if (timerContainer) {
+        timerContainer.classList.remove('running');
+    }
+
     if (iconPlay) iconPlay.textContent = '▶';
     if (textPlay) textPlay.textContent = t('btn_resume');
     if (statusText) statusText.textContent = t('status_paused');
@@ -275,6 +286,10 @@ function showNotification(rewardType) {
  * Set timer mode
  * @param {string} mode - Mode to set (focus/short/long)
  */
+/**
+ * Set timer mode
+ * @param {string} mode - Mode to set (focus/short/long)
+ */
 function setMode(mode) {
     if (!MODES[mode]) {
         console.error(`Unknown mode: ${mode}`);
@@ -291,14 +306,14 @@ function setMode(mode) {
     window.timerState.currentMode = mode;
     window.timerState.timeLeft = MODES[mode].time;
 
-    // Update mode button styles
+    // Update mode button states
     document.querySelectorAll('[id^="btn-"]').forEach(btn => {
-        btn.className = 'flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400';
+        btn.setAttribute('aria-selected', 'false');
     });
 
     const activeBtn = document.getElementById(`btn-${mode}`);
     if (activeBtn) {
-        activeBtn.className = 'flex-1 py-2 px-4 rounded-full text-sm font-semibold transition-all bg-white shadow-sm text-green-600 border border-green-100 dark:bg-gray-900 dark:text-green-400 dark:border dark:border-green-900';
+        activeBtn.setAttribute('aria-selected', 'true');
     }
 
     resetTimer();

@@ -50,7 +50,7 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body class="text-gray-700 relative dark:text-gray-200">
+<body class="text-gray-900 relative dark:text-gray-100">
 
     <!-- Audio for alarm (preloaded) -->
     <audio id="alarm-sound" preload="auto">
@@ -58,40 +58,40 @@
     </audio>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-6 md:py-8 flex flex-col md:flex-row gap-6 md:gap-8 min-h-screen">
+    <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row gap-8 min-h-screen">
 
         <!-- Left Panel: Controls -->
-        <aside class="w-full md:w-1/3 flex flex-col gap-4 md:gap-6">
+        <aside class="w-full md:w-[380px] flex-shrink-0 flex flex-col gap-6">
 
             <!-- Header -->
             <header class="text-center md:text-left">
-                <h1 id="app-title" class="text-3xl md:text-4xl font-bold text-green-700 dark:text-green-300 mb-1">
+                <h1 id="app-title" class="text-4xl md:text-5xl font-bold mb-2 tracking-tight">
                     🍅 Jardín Pomodoro
                 </h1>
-                <p id="app-subtitle" class="text-sm text-gray-500 dark:text-gray-400">
+                <p id="app-subtitle" class="text-lg opacity-80 font-medium">
                     Concéntrate y cultiva tu bosque
                 </p>
             </header>
 
             <!-- Language & Theme Controls -->
-            <div class="flex items-center justify-center md:justify-start gap-2 flex-wrap">
+            <div class="flex items-center justify-center md:justify-start gap-3 flex-wrap">
                 <button id="lang-pt" onclick="setLang('pt')"
-                    class="btn-lang text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    class="btn-lang text-xl p-2 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-black/40 transition-all"
                     aria-label="Português">
                     🇧🇷
                 </button>
                 <button id="lang-es" onclick="setLang('es')"
-                    class="btn-lang text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    class="btn-lang text-xl p-2 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-black/40 transition-all"
                     aria-label="Español">
                     🇪🇸
                 </button>
                 <button id="lang-en" onclick="setLang('en')"
-                    class="btn-lang text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    class="btn-lang text-xl p-2 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-black/40 transition-all"
                     aria-label="English">
                     🇺🇸
                 </button>
                 <button id="theme-toggle" onclick="toggleTheme()"
-                    class="btn-theme text-sm px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                    class="btn-theme px-4 py-2 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-black/40 text-sm font-bold transition-all ml-auto"
                     aria-label="Toggle theme">
                     🌚 Oscuro
                 </button>
@@ -99,22 +99,22 @@
 
             <!-- Timer Panel -->
             <div
-                class="glass-panel rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center relative overflow-hidden">
+                class="glass-panel rounded-[2rem] p-8 flex flex-col items-center justify-center relative overflow-hidden">
 
                 <!-- Mode Selector -->
-                <div class="flex bg-gray-100 dark:bg-gray-800 rounded-full p-1 mb-6 md:mb-8 w-full" role="tablist">
+                <div class="flex p-1 mb-8 w-full rounded-full bg-black/5 dark:bg-white/5" role="tablist">
                     <button onclick="setMode('focus')" id="btn-focus"
-                        class="flex-1 py-2 px-3 md:px-4 rounded-full text-xs md:text-sm font-semibold transition-all bg-white shadow-sm text-green-600 dark:bg-gray-900 dark:text-green-400 dark:border dark:border-green-900"
-                        role="tab" aria-selected="true">
+                        class="flex-1 py-2 px-4 rounded-full text-sm font-bold transition-all" role="tab"
+                        aria-selected="true">
                         Enfoque
                     </button>
                     <button onclick="setMode('short')" id="btn-short"
-                        class="flex-1 py-2 px-3 md:px-4 rounded-full text-xs md:text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400"
+                        class="flex-1 py-2 px-4 rounded-full text-sm font-bold transition-all opacity-70 hover:opacity-100"
                         role="tab" aria-selected="false">
                         Corto
                     </button>
                     <button onclick="setMode('long')" id="btn-long"
-                        class="flex-1 py-2 px-3 md:px-4 rounded-full text-xs md:text-sm font-semibold transition-all text-gray-500 hover:text-green-600 dark:text-gray-400"
+                        class="flex-1 py-2 px-4 rounded-full text-sm font-bold transition-all opacity-70 hover:opacity-100"
                         role="tab" aria-selected="false">
                         Largo
                     </button>
@@ -130,83 +130,70 @@
                         <div class="timer-progress-circle"></div>
                     </div>
 
-                    <!-- Spinner (when running) -->
-                    <div id="spinner-wrapper" class="timer-spinner-wrapper">
-                        <div class="timer-spinner-circle"></div>
-                    </div>
-
                     <!-- Timer Display -->
                     <div class="timer-display-wrapper">
-                        <time id="timer-display"
-                            class="text-5xl md:text-6xl font-bold text-gray-800 tracking-tighter dark:text-gray-100">
+                        <time id="timer-display">
                             25:00
                         </time>
-                        <span id="status-text"
-                            class="text-green-600 font-medium mt-2 text-sm md:text-base dark:text-green-400">
+                        <span id="status-text">
                             Listo para cultivar
                         </span>
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="flex gap-3 md:gap-4 w-full">
+                <div class="flex flex-col gap-3 w-full">
                     <button id="toggle-btn" onclick="toggleTimer()"
-                        class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 md:py-4 rounded-2xl shadow-lg transform transition active:scale-95 flex items-center justify-center gap-2"
-                        aria-label="Start timer">
-                        <span id="icon-play" aria-hidden="true">▶</span>
+                        class="w-full py-4 text-xl flex items-center justify-center gap-3" aria-label="Start timer">
+                        <span id="icon-play" aria-hidden="true" class="text-2xl">▶</span>
                         <span id="text-play">Comenzar</span>
                     </button>
-                    <button onclick="resetTimer()"
-                        class="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-3 md:py-4 px-5 md:px-6 rounded-2xl shadow transform transition active:scale-95 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200"
+
+                    <button onclick="resetTimer()" id="reset-btn-timer"
+                        class="w-full py-3 rounded-xl font-semibold text-sm opacity-80 hover:opacity-100"
                         aria-label="Reset timer">
-                        ↺
+                        ↺ Reiniciar Timer
                     </button>
                 </div>
             </div>
 
             <!-- Legend -->
-            <div class="glass-panel rounded-2xl p-4 text-sm">
-                <h3 id="legend-title" class="font-bold text-gray-600 mb-2 dark:text-gray-300">
+            <div class="glass-panel rounded-2xl p-6 text-sm">
+                <h3 id="legend-title" class="font-bold mb-4 opacity-90 uppercase tracking-wide text-xs">
                     Tu Recompensa:
                 </h3>
-                <ul class="space-y-2" role="list">
-                    <li id="legend-tree" class="flex items-center gap-2">
-                        <span class="text-xl" aria-hidden="true">🍎/🍋</span>
-                        25 min = Árbol Frutal
+                <ul class="space-y-3" role="list">
+                    <li id="legend-tree" class="flex items-center gap-3">
+                        <span class="text-2xl w-8 text-center" aria-hidden="true">🍎</span>
+                        <span class="opacity-80">25 min = Árbol Frutal</span>
                     </li>
-                    <li id="legend-flower" class="flex items-center gap-2">
-                        <span class="text-xl" aria-hidden="true">🌻/🌹</span>
-                        5 min = Flor
+                    <li id="legend-flower" class="flex items-center gap-3">
+                        <span class="text-2xl w-8 text-center" aria-hidden="true">🌻</span>
+                        <span class="opacity-80">5 min = Flor</span>
                     </li>
-                    <li id="legend-butterfly" class="flex items-center gap-2">
-                        <span class="text-xl" aria-hidden="true">🦋</span>
-                        15 min = Mariposa (Vuela)
+                    <li id="legend-butterfly" class="flex items-center gap-3">
+                        <span class="text-2xl w-8 text-center" aria-hidden="true">🦋</span>
+                        <span class="opacity-80">15 min = Mariposa (Vuela)</span>
                     </li>
                 </ul>
             </div>
-
-            <!-- Reset Garden Button -->
-            <button id="reset-btn" onclick="clearGarden()"
-                class="text-xs text-red-400 underline hover:text-red-600 text-center transition-colors"
-                aria-label="Clear garden">
-                Reiniciar Jardín (Borrar todo)
-            </button>
         </aside>
 
         <!-- Right Panel: Garden -->
-        <main class="w-full md:w-2/3 flex flex-col h-full relative">
-            <div
-                class="glass-panel flex-1 rounded-3xl p-4 md:p-6 relative overflow-hidden flex flex-col min-h-[400px] md:min-h-[600px]">
+        <main class="flex-1 h-full min-h-[500px] flex flex-col relative">
+            <div class="glass-panel flex-1 rounded-[2.5rem] p-6 relative overflow-hidden flex flex-col">
 
                 <!-- Garden Header -->
-                <div class="flex justify-between items-center mb-4 z-20 relative">
-                    <h2 id="garden-title" class="text-lg md:text-xl font-bold text-green-800 dark:text-green-300">
+                <div class="flex justify-between items-start mb-2 z-20 relative">
+                    <h2 id="garden-title" class="text-2xl font-bold opacity-90">
                         Tu Jardín
                     </h2>
-                    <div class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-bold dark:bg-green-900 dark:text-green-200"
+                    <div class="bg-white/40 dark:bg-black/20 text-xs px-4 py-2 rounded-full font-bold backdrop-blur-md shadow-sm"
                         role="status">
-                        <span id="plant-label">Plantas</span>: <span id="plant-count">0</span> |
-                        <span id="butterfly-label">Mariposas</span>: <span id="butterfly-count">0</span>
+                        <span id="plant-label">Plantas</span>: <span id="plant-count"
+                            class="text-green-600 dark:text-green-400 text-base ml-1 mr-2">0</span>
+                        <span id="butterfly-label">Mariposas</span>: <span id="butterfly-count"
+                            class="text-pink-500 text-base ml-1">0</span>
                     </div>
                 </div>
 
@@ -218,32 +205,31 @@
 
                 <!-- Garden Grid (for trees and flowers) -->
                 <div id="garden-grid"
-                    class="flex-1 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 md:gap-4 content-start overflow-y-auto z-0 p-2 pb-20"
+                    class="flex-1 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 content-start overflow-y-auto z-0 p-2 pb-32"
                     role="region" aria-label="Garden area">
                     <!-- Plants will be injected here -->
                 </div>
 
                 <!-- Ground Decoration -->
-                <div id="ground-gradient"
-                    class="absolute bottom-0 left-0 w-full h-16 md:h-20 bg-gradient-to-t from-green-200 to-transparent z-0 pointer-events-none opacity-50"
+                <div id="ground-gradient" class="absolute bottom-0 left-0 w-full h-32 z-0 pointer-events-none"
                     aria-hidden="true">
+                </div>
+
+                <!-- Reset Garden Button -->
+                <div class="absolute bottom-4 right-6 z-30">
+                    <button id="reset-btn" onclick="clearGarden()"
+                        class="text-xs text-red-500/70 hover:text-red-600 font-semibold px-3 py-1 bg-white/30 rounded-full hover:bg-white/50 transition-all dark:text-red-400 dark:hover:text-red-300"
+                        aria-label="Clear garden">
+                        Reiniciar Jardín
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 
     <!-- Footer -->
-    <footer class="mt-4 mb-6 px-3 py-1 text-center text-xs font-semibold text-gray-700 dark:text-gray-300">
-        Feito com 💙 pelo
-        <a href="https://instagram.com/aleqcodes" target="_blank" rel="noopener noreferrer"
-            class="underline hover:text-green-600 dark:hover:text-green-400">
-            @aleqcodes
-        </a>
-        • GitHub:
-        <a href="https://github.com/aleqcodes" target="_blank" rel="noopener noreferrer"
-            class="underline hover:text-green-600 dark:hover:text-green-400">
-            @aleqcodes
-        </a>
+    <footer class="mb-4 text-center text-xs font-semibold opacity-60 hover:opacity-100 transition-opacity">
+        Updated with 💙 by @aleqcodes
     </footer>
 
     <!-- JavaScript Modules (order matters) -->

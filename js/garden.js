@@ -232,7 +232,7 @@ function skyCellToPercent(col, row, cfg) {
  */
 function createTreeElement(item) {
     const el = document.createElement('div');
-    el.className = 'garden-item plant-item tree flex justify-center items-center h-20 w-20 bg-white/30 rounded-xl shadow-sm backdrop-blur-sm dark:bg-white/5 relative';
+    el.className = 'garden-item plant-item tree';
 
     const trunk = document.createElement('span');
     trunk.textContent = item.emoji || getRandomItem(ASSETS.tree);
@@ -277,9 +277,8 @@ function createTreeElement(item) {
 
     // Add tree name if exists
     if (item.name) {
-        const nameEl = document.createElement('div');
         nameEl.textContent = item.name;
-        nameEl.className = 'absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/50 dark:bg-white/10 whitespace-nowrap';
+        nameEl.className = 'plant-name-tag';
         el.appendChild(nameEl);
     }
 
@@ -304,7 +303,7 @@ function createTreeElement(item) {
  */
 function createFlowerElement(item) {
     const el = document.createElement('div');
-    el.className = 'garden-item plant-item flex justify-center items-center h-16 w-16 bg-white/30 rounded-xl shadow-sm backdrop-blur-sm dark:bg-white/5';
+    el.className = 'garden-item plant-item flower';
 
     const s = document.createElement('span');
     s.textContent = item.emoji;

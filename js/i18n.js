@@ -234,6 +234,9 @@ function updateTimerLanguage() {
 /**
  * Update language button active states
  */
+/**
+ * Update language button active states
+ */
 function updateLangButtons() {
     const buttons = {
         es: document.getElementById('lang-es'),
@@ -244,9 +247,9 @@ function updateLangButtons() {
     Object.entries(buttons).forEach(([lang, btn]) => {
         if (btn) {
             if (lang === currentLang) {
-                btn.classList.add('ring-2', 'ring-green-500', 'ring-offset-1');
+                btn.classList.add('active');
             } else {
-                btn.classList.remove('ring-2', 'ring-green-500', 'ring-offset-1');
+                btn.classList.remove('active');
             }
         }
     });
